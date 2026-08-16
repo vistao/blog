@@ -6,11 +6,12 @@ theme = 'PaperMod'
 enableRobotsTXT = true
 enableEmoji = true
 pygmentsUseClasses = true
+hasCJKLanguage = true
 
 [params]
   description = "George 的个人博客，记录技术与生活"
   author = "George"
-  DateFormat = "2006-01-02"
+  DateFormat = "2006-01-02 15:04:05"
   defaultTheme = "auto"
   disableThemeToggle = false
   ShowReadingTime = true
