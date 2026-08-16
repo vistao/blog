@@ -1,7 +1,7 @@
 {{- if (and .Site.Params.comments (ne .Params.comments false)) -}}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@waline/client@v3/dist/waline.css" />
+<link rel="stylesheet" href="/vendor/waline/waline.css" />
 <div id="waline"></div>
-<script defer src="https://cdn.jsdelivr.net/npm/@waline/client@v3/dist/waline.js"></script>
+<script defer src="/vendor/waline/waline.js"></script>
 <script>
   window.addEventListener('load', function () {
     if (window.Waline) {
