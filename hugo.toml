@@ -1,0 +1,75 @@
+baseURL = 'https://blog.v2er.org/'  # TODO: 确认最终域名后更新
+languageCode = 'zh-cn'
+title = "George 的博客"
+theme = 'PaperMod'
+
+enableRobotsTXT = true
+enableEmoji = true
+pygmentsUseClasses = true
+
+[params]
+  description = "George 的个人博客，记录技术与生活"
+  author = "George"
+  DateFormat = "2006-01-02"
+  defaultTheme = "auto"
+  disableThemeToggle = false
+  ShowReadingTime = true
+  ShowShareButtons = true
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowWordCount = true
+  ShowRssButtonInSectionTermList = true
+  comments = true
+
+  [params.homeInfoParams]
+    Title = "你好，我是 George 👋"
+    Content = "这里是我的个人博客，主要写技术折腾、网络与生活的记录。"
+
+  [params.assets]
+    disableHLJS = true
+
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/vistao"
+  [[params.socialIcons]]
+    name = "email"
+    url = "mailto:videreb@gmail.com"
+  [[params.socialIcons]]
+    name = "RSS"
+    url = "/index.xml"
+
+  [[menu.main]]
+    identifier = "home"
+    name = "首页"
+    url = "/"
+    weight = 10
+  [[menu.main]]
+    identifier = "archives"
+    name = "归档"
+    url = "/archives/"
+    weight = 20
+  [[menu.main]]
+    identifier = "search"
+    name = "搜索"
+    url = "/search/"
+    weight = 30
+  [[menu.main]]
+    identifier = "tags"
+    name = "标签"
+    url = "/tags/"
+    weight = 40
+  [[menu.main]]
+    identifier = "about"
+    name = "关于"
+    url = "/about/"
+    weight = 50
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    codeFences = true
+    lineNos = true
+    lineNumbersInTable = true
