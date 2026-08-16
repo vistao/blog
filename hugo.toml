@@ -34,7 +34,7 @@ pygmentsUseClasses = true
     url = "https://github.com/vistao"
   [[params.socialIcons]]
     name = "email"
-    url = "mailto:videreb@gmail.com"
+    url = "mailto:me@v2er.org"
   [[params.socialIcons]]
     name = "RSS"
     url = "/index.xml"
