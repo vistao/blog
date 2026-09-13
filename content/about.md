@@ -9,4 +9,4 @@ showToc: false
 
 这里是我的个人博客，主要记录技术折腾（网络、服务器、自动化）与生活随笔。
 
-博客使用 Hugo + Cloudflare Pages 构建，评论系统自部署在 Cloudflare Workers 上，全部免费。
+博客使用 Hugo + Cloudflare Pages 构建；评论为 Cloudflare 原生栈（Workers + D1 + Telegram 审核），图床 R2，与 [Vincent 的方案](https://missuo.me/posts/comment-system/) 同类架构。

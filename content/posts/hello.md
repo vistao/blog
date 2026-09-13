@@ -14,7 +14,7 @@ cover:
 
 - **框架**：Hugo（静态站点生成器，Markdown 写作）
 - **托管**：Cloudflare Pages（免费，连接 GitHub 自动构建部署）
-- **评论**：Waline 后端部署在 Cloudflare Workers + D1（免费）
+- **评论**：自研 API（Workers + D1 + Telegram 审核，参考 [missuo 方案](https://missuo.me/posts/comment-system/)）
 - **图床**：Cloudflare R2（免费额度）
 - **统计**：Cloudflare Web Analytics
 

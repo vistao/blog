@@ -1,0 +1,172 @@
+.blog-comments {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border, #e5e7eb);
+  font-size: 0.95rem;
+}
+
+.blog-comments h3 {
+  margin: 0 0 1rem;
+  font-size: 1.15rem;
+}
+
+.blog-comments .bc-meta {
+  color: var(--secondary, #6b7280);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.bc-thread {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+}
+
+.bc-item {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.bc-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.bc-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.bc-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.bc-name {
+  font-weight: 600;
+}
+
+.bc-name a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.bc-name a:hover {
+  text-decoration: underline;
+}
+
+.bc-flag {
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+.bc-time {
+  color: var(--secondary, #6b7280);
+  font-size: 0.8rem;
+}
+
+.bc-content {
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.bc-replies {
+  margin-top: 0.75rem;
+  padding-left: 0.5rem;
+  border-left: 2px solid var(--border, #e5e7eb);
+}
+
+.bc-reply-btn {
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  background: none;
+  border: none;
+  color: var(--theme, #27ae60);
+  cursor: pointer;
+  padding: 0;
+}
+
+.bc-form {
+  display: grid;
+  gap: 0.65rem;
+  max-width: 36rem;
+}
+
+.bc-form input,
+.bc-form textarea {
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--border, #d1d5db);
+  border-radius: 6px;
+  font: inherit;
+  background: var(--entry, #fff);
+  color: inherit;
+}
+
+.bc-form textarea {
+  min-height: 6rem;
+  resize: vertical;
+}
+
+.bc-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+}
+
+@media (max-width: 520px) {
+  .bc-form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bc-submit {
+  justify-self: start;
+  padding: 0.45rem 1.1rem;
+  border: none;
+  border-radius: 6px;
+  background: var(--theme, #27ae60);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+}
+
+.bc-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.bc-msg {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.bc-msg.ok {
+  color: var(--theme, #27ae60);
+}
+
+.bc-msg.err {
+  color: #b91c1c;
+}
+
+.bc-empty {
+  color: var(--secondary, #6b7280);
+  margin-bottom: 1rem;
+}
+
+.bc-load-more {
+  margin-bottom: 1rem;
+  background: none;
+  border: 1px solid var(--border, #d1d5db);
+  border-radius: 6px;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+  font: inherit;
+}

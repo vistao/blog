@@ -1,14 +1,23 @@
 {{- if (and .Site.Params.comments (ne .Params.comments false)) -}}
-<link rel="stylesheet" href="/vendor/waline/waline.css" />
-<div id="waline"></div>
-<script type="module">
-  import { init } from '/vendor/waline/waline.js';
-  init({
-    el: '#waline',
-    serverURL: 'https://comments.v2er.org',
-    lang: 'zh-CN',
-    pageview: true,
-    comment: true,
-  });
-</script>
+<link rel="stylesheet" href="{{ "css/comments.css" | relURL }}" />
+<section id="blog-comments" class="blog-comments"
+  data-api="https://comments.v2er.org"
+  data-path="{{ .RelPermalink }}"
+  data-title="{{ .Title }}">
+  <h3>评论 <span data-bc-count>0</span></h3>
+  <p class="bc-meta">Cloudflare Workers + D1，Telegram 审核</p>
+  <div data-bc-list></div>
+  <button type="button" class="bc-load-more" data-bc-load-more hidden>加载更多</button>
+  <form class="bc-form" data-bc-form>
+    <div class="bc-form-row">
+      <input name="author_name" placeholder="昵称" required minlength="2" maxlength="80" autocomplete="nickname" />
+      <input name="author_email" type="email" placeholder="邮箱（不会公开）" required autocomplete="email" />
+    </div>
+    <input name="author_url" type="url" placeholder="网站（可选）" autocomplete="url" />
+    <textarea name="content" placeholder="写下你的想法…" required minlength="2" maxlength="8000"></textarea>
+    <button type="submit" class="bc-submit">提交</button>
+    <p class="bc-msg" data-bc-msg role="status"></p>
+  </form>
+</section>
+<script src="{{ "js/comments.js" | relURL }}" defer></script>
 {{- end -}}
