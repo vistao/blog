@@ -59,10 +59,6 @@ API 示例：
 - `GET /api/comments?path=/posts/blog-architecture/`
 - `POST /api/comments`（JSON：`path`, `author_name`, `author_email`, `content`）
 
-## 和「机场 / 订阅」的关系
-
-**JMS 多端订阅**（`jms.v2er.org` Worker、Mac Surge 快照等）是另一条线，和本博客评论 **共用 Cloudflare 账号，但服务独立**。博客只负责内容与评论，不承载代理配置。
-
 ## 维护备忘
 
 | 事项 | 位置 |
