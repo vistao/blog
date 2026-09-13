@@ -1,3 +1,4 @@
 comments-worker/node_modules/
+.wrangler/
 .hugo_build.lock
 public/
