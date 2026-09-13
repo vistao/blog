@@ -129,22 +129,27 @@
 }
 
 .bc-anon-toggle {
-  display: flex;
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 0.5rem;
   font-size: 0.9rem;
   color: var(--secondary, #6b7280);
   cursor: pointer;
   user-select: none;
+  white-space: nowrap;
 }
 
-.bc-anon-toggle input {
+.bc-anon-toggle input[type="checkbox"] {
   width: 1rem;
   height: 1rem;
+  flex-shrink: 0;
+  margin: 0;
   accent-color: var(--bc-accent);
 }
 
-.bc-form input,
+.bc-form input:not([type="checkbox"]),
 .bc-form textarea {
   width: 100%;
   padding: 0.5rem 0.65rem;
