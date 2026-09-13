@@ -473,10 +473,13 @@ async function handlePostComment(request, env) {
   const postUrl = `${siteOrigin(env)}${path.startsWith("/") ? path.slice(1) : path}`;
   const preview = content.length > 200 ? `${content.slice(0, 200)}…` : content;
   const statusLabel = autoApprove ? "已公开" : "待审核";
+  const whoLine = anonymous
+    ? `<b>${escapeHtml(name)}</b>（未提供邮箱）`
+    : `<b>${escapeHtml(name)}</b> · ${escapeHtml(email)}`;
   const tgText =
     `<b>新评论</b> (${statusLabel})\n` +
     `<a href="${siteOrigin(env)}${path}">${path}</a>\n` +
-    `<b>${escapeHtml(name)}</b> · ${escapeHtml(email)}\n` +
+    `${whoLine}\n` +
     `${escapeHtml(preview)}`;
 
   await sendTelegram(env, tgText, moderationKeyboard(id, autoApprove));
