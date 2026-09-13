@@ -8,6 +8,17 @@
   const DELETE_TOKENS_KEY = "v2er-comment-delete-tokens";
   const MODERATOR_KEY_STORAGE = "v2er-comment-mod-key";
 
+  (function initModeratorFromHash() {
+    const m = location.hash.match(/^#bc-mod-(.+)$/);
+    if (!m) return;
+    try {
+      sessionStorage.setItem(MODERATOR_KEY_STORAGE, decodeURIComponent(m[1]));
+      history.replaceState(null, "", location.pathname + location.search);
+    } catch {
+      /* ignore */
+    }
+  })();
+
   function loadDeleteTokens() {
     try {
       return JSON.parse(localStorage.getItem(DELETE_TOKENS_KEY) || "{}");
@@ -76,7 +87,12 @@
   }
 
   async function deleteComment(c) {
-    if (!canDeleteComment(c.id)) return;
+    if (!canDeleteComment(c.id)) {
+      elMsg.textContent =
+        "无法删除：请用发表评论时的同一浏览器，或打开带站主密钥的书签链接后再试。";
+      elMsg.className = "bc-msg err";
+      return;
+    }
     if (!confirm("确定删除这条评论？")) return;
     const payload = { delete_token: getDeleteToken(c.id) || undefined };
     const mk = moderatorKey();
@@ -114,14 +130,11 @@
       ? `<a href="${esc(c.author_url)}" rel="nofollow noopener" target="_blank">${esc(c.author_name)}</a>`
       : esc(c.author_name);
     const flag = c.country_code ? `<span class="bc-flag" title="${esc(c.country_name || "")}">${flagEmoji(c.country_code)}</span>` : "";
-    const showDelete = canDeleteComment(c.id);
     const actions = [];
     if (!isReply) {
       actions.push('<button type="button" class="bc-action-btn bc-reply-btn">回复</button>');
     }
-    if (showDelete) {
-      actions.push('<button type="button" class="bc-action-btn bc-delete-btn">删除</button>');
-    }
+    actions.push('<button type="button" class="bc-action-btn bc-delete-btn">删除</button>');
     const actionsHtml = actions.length
       ? `<div class="bc-actions">${actions.join('<span class="bc-action-sep" aria-hidden="true">·</span>')}</div>`
       : "";

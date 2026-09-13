@@ -27,8 +27,8 @@ curl "https://api.telegram.org/bot<TOKEN>/setWebhook?url=https://comments.v2er.o
 - `POST /api/comments` JSON body — response includes `deleteToken` (store locally to allow author delete)
 - `DELETE /api/comments?id=<uuid>` JSON body: `{ "delete_token": "..." }` or `{ "moderator_key": "..." }`
 
-Optional secret `COMMENT_MODERATOR_KEY` lets the site owner delete any comment from the blog UI after running once in the browser console:
+Optional secret `COMMENT_MODERATOR_KEY` (in `~/secrets/app.env`) lets the site owner delete any comment from the blog UI. Open once per browser session:
 
-```js
-sessionStorage.setItem("v2er-comment-mod-key", "<same as COMMENT_MODERATOR_KEY>");
-```
+`https://blog.v2er.org/<文章路径>#bc-mod-<COMMENT_MODERATOR_KEY>`
+
+The hash is stripped after load. The delete button is always visible; without author token or mod session, click shows a short error message.
