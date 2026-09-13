@@ -3,4 +3,4 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 hugo --minify
-npx wrangler pages deploy public --project-name=blog --branch=main --commit-dirty=true
+npx wrangler@4 pages deploy public --project-name=blog --branch=main --commit-dirty=true
