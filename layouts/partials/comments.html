@@ -3,7 +3,10 @@
 <section id="blog-comments" class="blog-comments"
   data-api="https://comments.v2er.org"
   data-path="{{ .RelPermalink }}"
-  data-title="{{ .Title }}">
+  data-title="{{ .Title }}"
+  {{- with getenv "HUGO_COMMENT_MODERATOR_KEY" }}
+  data-mod-key="{{ . }}"
+  {{- end }}>
   <h3>评论 <span data-bc-count>0</span></h3>
   <div data-bc-list></div>
   <button type="button" class="bc-load-more" data-bc-load-more hidden>加载更多</button>
@@ -24,5 +27,5 @@
     <p class="bc-msg" data-bc-msg role="status"></p>
   </form>
 </section>
-<script src="{{ "js/comments.js" | relURL }}?v=3" defer></script>
+<script src="{{ "js/comments.js" | relURL }}?v=4" defer></script>
 {{- end -}}

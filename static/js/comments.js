@@ -27,6 +27,11 @@
       if (m) {
         activateModeratorKey(decodeURIComponent(m[1]));
         history.replaceState(null, "", location.pathname + location.search);
+        return;
+      }
+      if (root.dataset.modKey) {
+        activateModeratorKey(root.dataset.modKey);
+        root.removeAttribute("data-mod-key");
       }
     } catch {
       /* ignore */
@@ -117,18 +122,13 @@
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        const forbidden =
-          "没有删除权限：旧评论需站主先授权（见下方说明）；自己刚发的评论请用同一浏览器。";
         const msg =
           data.error === "forbidden"
-            ? forbidden
+            ? "无法删除这条评论（需要发表时的同一浏览器，或站主权限）。"
             : data.error === "not_found"
               ? "评论不存在或已被删除。"
               : "删除失败，请稍后再试。";
         showStatus(msg, "err");
-        if (data.error === "forbidden" && !dt && !mk) {
-          window.alert("没有删除权限。仅评论作者（发表时同一浏览器）或站主可删除。");
-        }
         return;
       }
       const map = loadDeleteTokens();

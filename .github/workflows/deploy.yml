@@ -26,6 +26,8 @@ jobs:
           extended: true
 
       - name: Build
+        env:
+          HUGO_COMMENT_MODERATOR_KEY: ${{ secrets.COMMENT_MODERATOR_KEY }}
         run: hugo --minify
 
       - name: Deploy to Cloudflare Pages
