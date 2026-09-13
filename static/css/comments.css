@@ -1,8 +1,16 @@
+/* PaperMod 的 --theme 是页面背景色，不能当按钮强调色用 */
 .blog-comments {
+  --bc-accent: #27ae60;
+  --bc-accent-hover: #219a52;
   margin-top: 2.5rem;
   padding-top: 1.5rem;
   border-top: 1px solid var(--border, #e5e7eb);
   font-size: 0.95rem;
+}
+
+[data-theme="dark"] .blog-comments {
+  --bc-accent: #3dd68c;
+  --bc-accent-hover: #2ecc71;
 }
 
 .blog-comments h3 {
@@ -88,7 +96,7 @@
   font-size: 0.8rem;
   background: none;
   border: none;
-  color: var(--theme, #27ae60);
+  color: var(--bc-accent);
   cursor: pointer;
   padding: 0;
 }
@@ -127,15 +135,21 @@
   }
 }
 
-.bc-submit {
+.blog-comments .bc-submit {
   justify-self: start;
-  padding: 0.45rem 1.1rem;
-  border: none;
+  padding: 0.5rem 1.25rem;
+  min-height: 2.25rem;
+  border: 1px solid var(--bc-accent-hover);
   border-radius: 6px;
-  background: var(--theme, #27ae60);
+  background: var(--bc-accent);
   color: #fff;
   cursor: pointer;
   font: inherit;
+  font-weight: 600;
+}
+
+.blog-comments .bc-submit:hover {
+  background: var(--bc-accent-hover);
 }
 
 .bc-submit:disabled {
@@ -149,7 +163,7 @@
 }
 
 .bc-msg.ok {
-  color: var(--theme, #27ae60);
+  color: var(--bc-accent);
 }
 
 .bc-msg.err {
