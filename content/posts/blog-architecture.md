@@ -48,7 +48,7 @@ comments.v2er.org（Worker: waline-on-worker）
 
 ## 评论：API 优先，无账号体系
 
-访客**不需要注册**：填昵称、邮箱（不公开）、正文即可。邮箱用于 Gravatar 头像，且禁止冒充站长邮箱（`me@v2er.org`）。
+访客**不需要注册**：可勾选 **匿名评论**（只填正文）；或填写昵称 + 邮箱（不公开）+ 正文。邮箱用于 Gravatar，且禁止冒充站长邮箱（`me@v2er.org`）。
 
 - 默认 **先审后发**（`AUTO_APPROVE=false`）：提交后提示「审核通过后会显示」，同时 Telegram 收到通知。
 - 楼中楼：`parent_id` / `root_id` / `depth`，前端 `static/js/comments.js` 渲染。

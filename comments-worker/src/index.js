@@ -377,24 +377,36 @@ async function handleGetStats(request, env) {
 async function handlePostComment(request, env) {
   try {
   const body = await request.json().catch(() => null);
-  if (!body?.content || !body?.author_name || !body?.author_email) {
+  if (!body?.content) {
     return jsonWithCors({ error: "missing_fields" }, env, request, 400);
   }
 
   const path = normalizePath(body.path);
-  const name = String(body.author_name).trim().slice(0, 80);
-  const email = String(body.author_email).trim().toLowerCase().slice(0, 200);
   const content = String(body.content).trim().slice(0, 8000);
   const authorUrl = body.author_url ? String(body.author_url).trim().slice(0, 500) : null;
   const parentId = body.parent_id ? String(body.parent_id) : null;
+  const anonymous = body.anonymous === true || body.anonymous === "true";
 
-  if (name.length < 2 || !email.includes("@") || content.length < 2) {
+  if (content.length < 2) {
     return jsonWithCors({ error: "invalid_input" }, env, request, 400);
   }
 
-  const reserved = (env.ADMIN_EMAIL || "me@v2er.org").toLowerCase();
-  if (email === reserved) {
-    return jsonWithCors({ error: "reserved_email" }, env, request, 403);
+  const id = newId();
+  let name;
+  let email;
+  if (anonymous) {
+    name = "匿名";
+    email = `anon+${id}@comments.local`;
+  } else {
+    name = String(body.author_name || "").trim().slice(0, 80);
+    email = String(body.author_email || "").trim().toLowerCase().slice(0, 200);
+    if (name.length < 2 || !email.includes("@")) {
+      return jsonWithCors({ error: "invalid_input" }, env, request, 400);
+    }
+    const reserved = (env.ADMIN_EMAIL || "me@v2er.org").toLowerCase();
+    if (email === reserved) {
+      return jsonWithCors({ error: "reserved_email" }, env, request, 403);
+    }
   }
 
   let depth = 0;
@@ -410,11 +422,10 @@ async function handlePostComment(request, env) {
 
   const autoApprove = env.AUTO_APPROVE === "true";
   const status = autoApprove ? "approved" : "pending";
-  const id = newId();
   const now = nowIso();
   let gravatarHash;
   try {
-    gravatarHash = md5Hex(email);
+    gravatarHash = md5Hex(anonymous ? id : email);
   } catch {
     gravatarHash = "00000000000000000000000000000000";
   }

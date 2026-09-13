@@ -11,6 +11,24 @@
   const elForm = root.querySelector("[data-bc-form]");
   const elMsg = root.querySelector("[data-bc-msg]");
   const elLoadMore = root.querySelector("[data-bc-load-more]");
+  const elAnon = root.querySelector("[data-bc-anonymous]");
+  const elIdentityFields = root.querySelectorAll("[data-bc-identity]");
+
+  function setAnonymousMode(on) {
+    elIdentityFields.forEach((el) => {
+      el.hidden = on;
+      const inputs = el.matches("input, textarea")
+        ? [el]
+        : [...el.querySelectorAll("input, textarea")];
+      inputs.forEach((input) => {
+        input.required = !on;
+        if (on) input.value = "";
+      });
+    });
+  }
+
+  elAnon?.addEventListener("change", () => setAnonymousMode(elAnon.checked));
+  setAnonymousMode(elAnon?.checked ?? false);
 
   let page = 1;
   let totalPages = 1;
@@ -104,15 +122,19 @@
     elMsg.textContent = "";
     elMsg.className = "bc-msg";
     const fd = new FormData(elForm);
+    const anonymous = fd.get("anonymous") === "on";
     const payload = {
       path: pagePath,
       page_title: pageTitle,
-      author_name: fd.get("author_name"),
-      author_email: fd.get("author_email"),
-      author_url: fd.get("author_url") || undefined,
       content: fd.get("content"),
       parent_id: replyParentId,
+      anonymous,
     };
+    if (!anonymous) {
+      payload.author_name = fd.get("author_name");
+      payload.author_email = fd.get("author_email");
+      payload.author_url = fd.get("author_url") || undefined;
+    }
     const btn = elForm.querySelector(".bc-submit");
     btn.disabled = true;
     try {

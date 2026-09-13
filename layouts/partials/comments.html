@@ -8,11 +8,15 @@
   <div data-bc-list></div>
   <button type="button" class="bc-load-more" data-bc-load-more hidden>加载更多</button>
   <form class="bc-form" data-bc-form>
-    <div class="bc-form-row">
-      <input name="author_name" placeholder="昵称" required minlength="2" maxlength="80" autocomplete="nickname" />
-      <input name="author_email" type="email" placeholder="邮箱（不会公开）" required autocomplete="email" />
+    <label class="bc-anon-toggle">
+      <input type="checkbox" name="anonymous" data-bc-anonymous />
+      匿名评论（无需昵称与邮箱）
+    </label>
+    <div class="bc-form-row" data-bc-identity>
+      <input name="author_name" placeholder="昵称" minlength="2" maxlength="80" autocomplete="nickname" />
+      <input name="author_email" type="email" placeholder="邮箱（不会公开，仅用于 Gravatar）" autocomplete="email" />
     </div>
-    <input name="author_url" type="url" placeholder="网站（可选）" autocomplete="url" />
+    <input name="author_url" type="url" placeholder="网站（可选）" data-bc-identity autocomplete="url" />
     <textarea name="content" placeholder="写下你的想法…" required minlength="2" maxlength="8000"></textarea>
     <button type="submit" class="bc-submit">提交</button>
     <p class="bc-msg" data-bc-msg role="status"></p>
