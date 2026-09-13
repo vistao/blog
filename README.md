@@ -1,7 +1,7 @@
 # George 的博客（Hugo + Cloudflare Pages）
 
 - 站点：https://blog.v2er.org
-- 评论 Worker：`comments-worker/`（部署到 `waline-on-worker`，域名 `comments.v2er.org`）
+- 评论 Worker：`comments-worker/`（Worker 名 `blog-comments`，域名 `comments.v2er.org`）
 
 ## 发布
 

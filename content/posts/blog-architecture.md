@@ -22,7 +22,7 @@ Cloudflare Pages（blog.v2er.org）
     ├── 图片走 R2（文中插图 URL）
     └── 文章页加载 comments.js → comments.v2er.org API
 
-comments.v2er.org（Worker: waline-on-worker）
+comments.v2er.org（Worker: blog-comments）
     ├── D1：评论、页面统计、楼中楼字段
     └── 新评论 → Telegram Bot 通知（批准 / 垃圾 / 删除）
 ```
@@ -52,7 +52,7 @@ comments.v2er.org（Worker: waline-on-worker）
 
 - 默认 **先审后发**（`AUTO_APPROVE=false`）：提交后提示「审核通过后会显示」，同时 Telegram 收到通知。
 - 楼中楼：`parent_id` / `root_id` / `depth`，前端 `static/js/comments.js` 渲染。
-- 后端代码在仓库 `comments-worker/`，部署到 Worker **`waline-on-worker`**（历史名称），自定义域名 **`comments.v2er.org`**。
+- 后端代码在仓库 `comments-worker/`，部署到 Worker **`blog-comments`**，自定义域名 **`comments.v2er.org`**。
 
 API 示例：
 

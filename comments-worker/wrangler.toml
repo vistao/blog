@@ -1,4 +1,4 @@
-name = "waline-on-worker"
+name = "blog-comments"
 main = "src/index.js"
 compatibility_date = "2024-08-01"
 
@@ -7,10 +7,13 @@ binding = "DB"
 database_name = "blog-comments"
 database_id = "01646a40-44f1-486c-ac11-6318bb1684a4"
 
+[[routes]]
+pattern = "comments.v2er.org/*"
+zone_name = "v2er.org"
+
 [vars]
 SITE_URL = "https://blog.v2er.org"
 AUTO_APPROVE = "false"
 ADMIN_EMAIL = "me@v2er.org"
 
-# Secrets: TELEGRAM_BOT_TOKEN, TELEGRAM_ADMIN_CHAT_ID, TELEGRAM_WEBHOOK_SECRET
-# Route comments.v2er.org/* is bound in Cloudflare dashboard (legacy Waline worker name).
+# Secrets: TELEGRAM_BOT_TOKEN, TELEGRAM_ADMIN_CHAT_ID, TELEGRAM_WEBHOOK_SECRET, COMMENT_MODERATOR_KEY
