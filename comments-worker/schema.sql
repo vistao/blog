@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS comments (
   country_code TEXT,
   country_name TEXT,
   asn TEXT,
+  delete_token TEXT,
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL
 );

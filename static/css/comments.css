@@ -91,14 +91,35 @@
   border-left: 2px solid var(--border, #e5e7eb);
 }
 
-.bc-reply-btn {
+.bc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
   margin-top: 0.35rem;
+}
+
+.bc-action-sep {
+  color: var(--secondary, #9ca3af);
+  font-size: 0.75rem;
+  user-select: none;
+}
+
+.bc-action-btn {
   font-size: 0.8rem;
   background: none;
   border: none;
   color: var(--bc-accent);
   cursor: pointer;
   padding: 0;
+}
+
+.bc-delete-btn {
+  color: var(--secondary, #6b7280);
+}
+
+.bc-delete-btn:hover {
+  color: #b91c1c;
 }
 
 .bc-form {

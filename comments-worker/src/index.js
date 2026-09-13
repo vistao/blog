@@ -5,7 +5,7 @@
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
 };
 
@@ -167,6 +167,21 @@ function gravatarUrl(hash) {
 
 function newId() {
   return crypto.randomUUID();
+}
+
+function randomToken() {
+  const bytes = new Uint8Array(24);
+  crypto.getRandomValues(bytes);
+  return [...bytes].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function canDeleteComment(row, body, env) {
+  const modKey = env.COMMENT_MODERATOR_KEY;
+  if (modKey && String(body?.moderator_key || "") === modKey) {
+    return true;
+  }
+  const token = String(body?.delete_token || "").trim();
+  return token.length > 0 && row.delete_token === token;
 }
 
 function normalizePath(path) {
@@ -392,6 +407,7 @@ async function handlePostComment(request, env) {
   }
 
   const id = newId();
+  const deleteToken = randomToken();
   let name;
   let email;
   if (anonymous) {
@@ -438,9 +454,9 @@ async function handlePostComment(request, env) {
     `INSERT INTO comments (
       id, page_path, parent_id, root_id, depth,
       author_name, author_email, author_url, content, status,
-      gravatar_hash, country_code, country_name, asn,
+      gravatar_hash, country_code, country_name, asn, delete_token,
       created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   )
     .bind(
       id,
@@ -457,6 +473,7 @@ async function handlePostComment(request, env) {
       meta.country_code ?? null,
       meta.country_name ?? null,
       meta.asn ?? null,
+      deleteToken,
       now,
       now,
     )
@@ -488,6 +505,7 @@ async function handlePostComment(request, env) {
     {
       ok: true,
       pending: !autoApprove,
+      deleteToken,
       comment: publicComment({
         id,
         page_path: path,
@@ -520,6 +538,27 @@ async function handlePostComment(request, env) {
 
 function escapeHtml(s) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+async function handleDeleteComment(request, env) {
+  const url = new URL(request.url);
+  const id = url.searchParams.get("id");
+  if (!id) {
+    return jsonWithCors({ error: "missing_id" }, env, request, 400);
+  }
+  const body = await request.json().catch(() => ({}));
+  const row = await getComment(env.DB, id);
+  if (!row) {
+    return jsonWithCors({ error: "not_found" }, env, request, 404);
+  }
+  if (row.status === "deleted") {
+    return jsonWithCors({ ok: true, deleted: true, id }, env, request);
+  }
+  if (!canDeleteComment(row, body, env)) {
+    return jsonWithCors({ error: "forbidden" }, env, request, 403);
+  }
+  await setCommentStatus(env.DB, id, "deleted");
+  return jsonWithCors({ ok: true, deleted: true, id }, env, request);
 }
 
 async function handleTelegramWebhook(request, env) {
@@ -582,6 +621,9 @@ export default {
     }
     if (url.pathname === "/api/comments" && request.method === "POST") {
       return handlePostComment(request, env);
+    }
+    if (url.pathname === "/api/comments" && request.method === "DELETE") {
+      return handleDeleteComment(request, env);
     }
     if (url.pathname === "/telegram/webhook" && request.method === "POST") {
       return handleTelegramWebhook(request, env);
