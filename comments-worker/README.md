@@ -1,5 +1,7 @@
 # blog-comments (Cloudflare Worker)
 
+Wrangler 服务名 **`blog-comments`**，路由 **`comments.v2er.org/*`**，D1 **`blog-comments`**。
+
 API-first comments for [blog.v2er.org](https://blog.v2er.org/), aligned with [missuo.me/posts/comment-system](https://missuo.me/posts/comment-system/).
 
 ## Deploy
