@@ -262,9 +262,13 @@ async function sendTelegram(env, text, replyMarkup) {
   });
 }
 
-function moderationKeyboard(commentId, autoApproved) {
+/** Inline keyboard for Telegram moderation. Approved comments keep Spam/Delete. */
+function moderationKeyboard(commentId, status) {
+  if (status === "deleted" || status === "spam") {
+    return null;
+  }
   const row = [];
-  if (!autoApproved) {
+  if (status !== "approved") {
     row.push({ text: "✅ Approve", callback_data: `approve:${commentId}` });
   }
   row.push({ text: "🚫 Spam", callback_data: `spam:${commentId}` });
@@ -499,7 +503,7 @@ async function handlePostComment(request, env) {
     `${whoLine}\n` +
     `${escapeHtml(preview)}`;
 
-  await sendTelegram(env, tgText, moderationKeyboard(id, autoApprove));
+  await sendTelegram(env, tgText, moderationKeyboard(id, autoApprove ? "approved" : "pending"));
 
   return jsonWithCors(
     {
@@ -590,6 +594,7 @@ async function handleTelegramWebhook(request, env) {
     if (row && cb.message?.chat?.id && cb.message?.message_id) {
       const suffix = `\n\n— <i>${label}</i>`;
       const newText = (cb.message.text || "") + suffix;
+      const keyboard = moderationKeyboard(commentId, row.status);
       await fetch(`https://api.telegram.org/bot${token}/editMessageText`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -598,6 +603,7 @@ async function handleTelegramWebhook(request, env) {
           message_id: cb.message.message_id,
           text: newText.slice(0, 4000),
           parse_mode: "HTML",
+          reply_markup: keyboard ?? { inline_keyboard: [] },
         }),
       });
     }

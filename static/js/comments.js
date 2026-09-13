@@ -8,12 +8,26 @@
   const DELETE_TOKENS_KEY = "v2er-comment-delete-tokens";
   const MODERATOR_KEY_STORAGE = "v2er-comment-mod-key";
 
-  (function initModeratorFromHash() {
-    const m = location.hash.match(/^#bc-mod-(.+)$/);
-    if (!m) return;
+  function activateModeratorKey(key) {
+    if (!key) return;
+    sessionStorage.setItem(MODERATOR_KEY_STORAGE, key);
+  }
+
+  (function initModeratorSession() {
     try {
-      sessionStorage.setItem(MODERATOR_KEY_STORAGE, decodeURIComponent(m[1]));
-      history.replaceState(null, "", location.pathname + location.search);
+      const u = new URL(location.href);
+      const fromQuery = u.searchParams.get("bc_mod");
+      if (fromQuery) {
+        activateModeratorKey(fromQuery);
+        u.searchParams.delete("bc_mod");
+        history.replaceState(null, "", u.pathname + u.search + u.hash);
+        return;
+      }
+      const m = location.hash.match(/^#bc-mod-(.+)$/);
+      if (m) {
+        activateModeratorKey(decodeURIComponent(m[1]));
+        history.replaceState(null, "", location.pathname + location.search);
+      }
     } catch {
       /* ignore */
     }
@@ -42,8 +56,10 @@
     return sessionStorage.getItem(MODERATOR_KEY_STORAGE) || "";
   }
 
-  function canDeleteComment(commentId) {
-    return Boolean(getDeleteToken(commentId) || moderatorKey());
+  function showStatus(text, kind) {
+    elMsg.textContent = text;
+    elMsg.className = kind === "err" ? "bc-msg err" : kind === "ok" ? "bc-msg ok" : "bc-msg";
+    elMsg.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
   const elList = root.querySelector("[data-bc-list]");
@@ -87,14 +103,10 @@
   }
 
   async function deleteComment(c) {
-    if (!canDeleteComment(c.id)) {
-      elMsg.textContent =
-        "无法删除：请用发表评论时的同一浏览器，或打开带站主密钥的书签链接后再试。";
-      elMsg.className = "bc-msg err";
-      return;
-    }
     if (!confirm("确定删除这条评论？")) return;
-    const payload = { delete_token: getDeleteToken(c.id) || undefined };
+    const payload = {};
+    const dt = getDeleteToken(c.id);
+    if (dt) payload.delete_token = dt;
     const mk = moderatorKey();
     if (mk) payload.moderator_key = mk;
     try {
@@ -105,8 +117,18 @@
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        elMsg.textContent = data.error === "forbidden" ? "无法删除该评论。" : "删除失败，请稍后再试。";
-        elMsg.className = "bc-msg err";
+        const forbidden =
+          "没有删除权限：旧评论需站主先授权（见下方说明）；自己刚发的评论请用同一浏览器。";
+        const msg =
+          data.error === "forbidden"
+            ? forbidden
+            : data.error === "not_found"
+              ? "评论不存在或已被删除。"
+              : "删除失败，请稍后再试。";
+        showStatus(msg, "err");
+        if (data.error === "forbidden" && !dt && !mk) {
+          window.alert("没有删除权限。仅评论作者（发表时同一浏览器）或站主可删除。");
+        }
         return;
       }
       const map = loadDeleteTokens();
@@ -114,11 +136,9 @@
       localStorage.setItem(DELETE_TOKENS_KEY, JSON.stringify(map));
       page = 1;
       await loadComments(false);
-      elMsg.textContent = "评论已删除。";
-      elMsg.className = "bc-msg ok";
+      showStatus("评论已删除。", "ok");
     } catch {
-      elMsg.textContent = "网络错误，请稍后再试。";
-      elMsg.className = "bc-msg err";
+      showStatus("网络错误，请稍后再试。", "err");
     }
   }
 
@@ -157,8 +177,7 @@
   function startReply(c) {
     replyParentId = c.id;
     elForm.querySelector("[name=content]").focus();
-    elMsg.textContent = `正在回复 ${c.author_name}`;
-    elMsg.className = "bc-msg";
+    showStatus(`正在回复 ${c.author_name}`, "");
   }
 
   function renderThread(thread) {
